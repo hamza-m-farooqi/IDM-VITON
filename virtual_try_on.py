@@ -7,7 +7,7 @@ from idm_viton_abstraction import idm_viton_abstraction
 # Initialize the idm_viton instance
 idm_viton_instance = idm_viton_abstraction()
 
-def process_images(garm_img_path, human_img_path, garment_description, garment_type, is_checked):
+def process_images(garm_img_path, human_img_path,output_img_path, garment_description, garment_type, is_checked):
     try:
         # Open images
         garm_img = Image.open(garm_img_path)
@@ -37,11 +37,10 @@ def process_images(garm_img_path, human_img_path, garment_description, garment_t
             garment_type,
         )
 
-        # Save the output and mask images
-        output_image.save("output.png", format="PNG")
-        mask_image.save("mask.png", format="PNG")
+        # Save the output image
+        output_image.save(output_img_path, format="PNG")
 
-        print("Images processed and saved as 'output.png' and 'mask.png'.")
+        print(f"Image processed and saved as '{output_img_path}'.")
 
     except Exception as e:
         print(f"Error: {str(e)}")
@@ -50,10 +49,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process images for virtual try-on.")
     parser.add_argument("garm_img", type=str, help="Path to the garment image")
     parser.add_argument("human_img", type=str, help="Path to the human image")
+    parser.add_argument("output_img", type=str, help="Path to save the output image")
     parser.add_argument("description", type=str, help="Description of the garment")
     parser.add_argument("garment_type", type=str, help="Type of the garment: dresses, upper_body, lower_body")
     parser.add_argument("is_checked", type=bool, help="Boolean flag for checking")
     
     args = parser.parse_args()
     
-    process_images(args.garm_img, args.human_img, args.description, args.garment_type, args.is_checked)
+    process_images(args.garm_img, args.human_img, args.output_img,args.description, args.garment_type, bool(args.is_checked))
